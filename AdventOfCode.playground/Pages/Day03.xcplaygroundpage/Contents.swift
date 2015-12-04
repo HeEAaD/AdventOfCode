@@ -21,7 +21,7 @@ extension Coordinate {
 }
 
 extension Coordinate : Hashable {
-    public var hashValue: Int {
+    var hashValue: Int {
         return "\(x)x\(y)".hashValue
     }
 }
