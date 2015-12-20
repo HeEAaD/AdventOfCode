@@ -1,4 +1,3 @@
-import Foundation
 
 let max = 1_000_000
 var houses = Array(count: max, repeatedValue: 0)
