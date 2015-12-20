@@ -4,7 +4,7 @@ let max = 1_000_000
 var houses = Array(count: max, repeatedValue: 0)
 for i in 1...max {
 //  for j in i...max where j % i == 0 { // swifty, but slow
-    for (var j = i; j<=max; j += i) {
+    for var j = i; j<=max; j += i {
         houses[j-1] += i
     }
 }
@@ -19,7 +19,7 @@ houses = Array(count: max, repeatedValue: 0)
 for i in 1...max {
     var visit = 0
 //  for j in i...max where j % i == 0 { // swifty, but slow
-    for (var j = i; j<=max; j += i) {
+    for var j = i; j<=max; j += i {
         houses[j-1] += i * 11
         visit += 1
         if visit == 50 {
