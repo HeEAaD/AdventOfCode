@@ -10,6 +10,7 @@ let package = Package(
         // .package(url: /* package url */, from: "1.0.0"),
     ],
     targets: [
-        .target(name: "Day01", dependencies: [])
+        .target(name: "Day01", dependencies: []),
+        .target(name: "Day02", dependencies: []),
     ]
 )
