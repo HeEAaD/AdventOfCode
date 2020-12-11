@@ -55,10 +55,11 @@ func occupiedSeats(around: (r: Int, c: Int), grid: [[Field]]) -> Int {
 }
 
 func run(grid: [[Field]], threshold: Int, occupiedSeats: ((Int, Int), [[Field]]) -> Int) -> Int {
-
-    func step(grid: [[Field]]) -> [[Field]] {
+    var grid = grid
+    var changed = true
+    while changed {
+        changed = false
         var newGrid = grid
-
         for i in 0..<grid.count {
             for j in 0..<grid[i].count {
 
@@ -68,22 +69,16 @@ func run(grid: [[Field]], threshold: Int, occupiedSeats: ((Int, Int), [[Field]])
                 case .seat(false):
                     if occupiedSeats((i, j), grid) == 0 {
                         newGrid[i][j] = .seat(true)
+                        changed = true
                     }
                 case .seat(true):
                     if occupiedSeats((i, j), grid) >= threshold {
                         newGrid[i][j] = .seat(false)
+                        changed = true
                     }
                 }
             }
         }
-
-        return newGrid
-    }
-
-    var grid = grid
-    while true {
-        let newGrid = step(grid: grid)
-        if newGrid == grid { break }
         grid = newGrid
     }
 
