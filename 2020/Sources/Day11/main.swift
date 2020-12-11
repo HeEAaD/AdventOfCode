@@ -1,4 +1,4 @@
-enum Field: Hashable {
+enum Field: Equatable {
     case empty
     case seat(Bool)
 }
@@ -81,14 +81,10 @@ func run(grid: [[Field]], threshold: Int, occupiedSeats: ((Int, Int), [[Field]])
     }
 
     var grid = grid
-    var grids: Set<[[Field]]> = [grid]
-
     while true {
-        grid = step(grid: grid)
-        if grids.contains(grid) {
-            break
-        }
-        grids.insert(grid)
+        let newGrid = step(grid: grid)
+        if newGrid == grid { break }
+        grid = newGrid
     }
 
     return grid.reduce(into: 0, { $0 += $1.reduce(into: 0, {
