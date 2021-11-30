@@ -1,6 +1,6 @@
 # Advent of Code 
 
-My solutions of http://adventofcode.com .
+My solutions of https://adventofcode.com .
 
 ## Warning: Hacky
 * No failure handling
