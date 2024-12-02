@@ -6,5 +6,6 @@ let package = Package(
     name: "2024",
     targets: [
         .executableTarget(name: "Day01"),
+        .executableTarget(name: "Day02"),
     ]
 )
