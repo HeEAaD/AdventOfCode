@@ -18,5 +18,6 @@ let package = Package(
         .executableTarget(name: "Day10"),
         .executableTarget(name: "Day11"),
         .executableTarget(name: "Day12"),
+        .executableTarget(name: "Day13"),
     ]
 )
