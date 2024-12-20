@@ -1,8 +1,8 @@
 let map: [[Character]] = input.split(whereSeparator: \.isNewline).map { $0.map { $0 } }
 let stepsMap = calculateStepsMap(map: map)
 
-print("Answer 1:", cheatSum(map: map, stepsMap: stepsMap, maxCheatLength: 2))
-print("Answer 2:", cheatSum(map: map, stepsMap: stepsMap, maxCheatLength: 20))
+print("Answer 1:", await cheatSumAsync(map: map, stepsMap: stepsMap, maxCheatLength: 2))
+print("Answer 2:", await cheatSumAsync(map: map, stepsMap: stepsMap, maxCheatLength: 20))
 
 // MARK: - Methods
 
@@ -11,36 +11,42 @@ struct Point: Hashable {
     let y: Int
 }
 
-func cheatSum(map: [[Character]], stepsMap: [[Int]], maxCheatLength: Int) -> Int {
-    var sum = 0
+func cheatSumAsync(map: [[Character]], stepsMap: [[Int]], maxCheatLength: Int) async -> Int {
+    await withTaskGroup(of: Int.self) { taskGroup in
+        for y in 0..<map.count {
+            taskGroup.addTask {
+                var sum = 0
+                for x in 0..<map[y].count where map[y][x] == "." || map[y][x] == "S" {
+                    for dy in -maxCheatLength...maxCheatLength {
+                        for dx in -maxCheatLength...maxCheatLength {
+                            guard dx != 0 || dy != 0 else { continue }
 
-    for y in 0..<map.count {
-        for x in 0..<map[y].count where map[y][x] == "." || map[y][x] == "S" {
-            for dy in -maxCheatLength...maxCheatLength {
-                for dx in -maxCheatLength...maxCheatLength {
-                    guard dx != 0 || dy != 0 else { continue }
+                            let cheatEndPoint = Point(x: x + dx, y: y + dy)
 
-                    let cheatEndPoint = Point(x: x + dx, y: y + dy)
+                            guard cheatEndPoint.y >= 0 else { continue }
+                            guard cheatEndPoint.x >= 0 else { continue }
+                            guard cheatEndPoint.y < map.count else { continue }
+                            guard cheatEndPoint.x < map[cheatEndPoint.y].count else { continue }
+                            guard map[cheatEndPoint.y][cheatEndPoint.x] != "#" else { continue }
 
-                    guard cheatEndPoint.y >= 0 else { continue }
-                    guard cheatEndPoint.x >= 0 else { continue }
-                    guard cheatEndPoint.y < map.count else { continue }
-                    guard cheatEndPoint.x < map[cheatEndPoint.y].count else { continue }
-                    guard map[cheatEndPoint.y][cheatEndPoint.x] != "#" else { continue }
+                            let cheatDistance: Int = abs(x - cheatEndPoint.x) + abs(y - cheatEndPoint.y)
+                            guard cheatDistance <= maxCheatLength else { continue }
 
-                    let cheatDistance: Int = abs(x - cheatEndPoint.x) + abs(y - cheatEndPoint.y)
-                    guard cheatDistance <= maxCheatLength else { continue }
-
-                    let diff = stepsMap[cheatEndPoint.y][cheatEndPoint.x] - stepsMap[y][x] - cheatDistance
-                    if diff >= 100 {
-                        sum += 1
+                            let diff = stepsMap[cheatEndPoint.y][cheatEndPoint.x] - stepsMap[y][x] - cheatDistance
+                            if diff >= 100 {
+                                sum += 1
+                            }
+                        }
                     }
                 }
+                return sum
             }
         }
-    }
 
-    return sum
+        return await taskGroup.reduce(into: 0) { partialResult, sum in
+            partialResult += sum
+        }
+    }
 }
 
 func calculateStepsMap(map: [[Character]]) -> [[Int]] {
