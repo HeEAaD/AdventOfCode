@@ -7,5 +7,6 @@ let package = Package(
     platforms: [.macOS(.v13)],
     targets: [
         .executableTarget(name: "Day01"),
+        .executableTarget(name: "Day02"),
     ]
 )
